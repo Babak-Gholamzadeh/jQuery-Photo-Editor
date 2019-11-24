@@ -1,0 +1,376 @@
+.output-result-canvas {
+  border: 1px solid blue;
+}
+.output-resize-canvas {
+  border: 1px solid red;
+}
+.photo-editor-container {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 10000;
+  background-color: rgba(#000, .5);
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: opacity 0.3s ease-out;
+  transition: opacity 0.3s ease-out;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  .editor-wrapper {
+    position: absolute;
+    overflow: hidden;
+    width: 600px;
+    height: 510px;
+    max-width: calc(100% - 10px);
+    max-height: calc(100% - 10px);
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -webkit-box-shadow: 0 0 20px 0 rgba(#000, .3);
+    box-shadow: 0 0 20px 0 rgba(#000, .3);
+    border-radius: 5px;
+    background-color: #111;
+    padding: 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    .editor-canvas-container {
+      width: 100%;
+      height: 400px;
+      max-height: calc(100% - 70px);
+      border-radius: 3px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      background-color: #fff;
+      background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(0, 0, 0, 0.3)), color-stop(50%, transparent), to(transparent)), -webkit-gradient(linear, left top, right top, from(transparent), color-stop(50%, transparent), color-stop(50%, rgba(0, 0, 0, 0))), -webkit-gradient(linear, left top, left bottom, color-stop(50%, rgba(0, 0, 0, 0.3)), color-stop(50%, transparent), to(transparent)), -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), color-stop(50%, rgba(0, 0, 0, 0))), -webkit-gradient(linear, left top, left bottom, color-stop(50%, #ffffff), color-stop(50%, transparent), to(transparent)), -webkit-gradient(linear, left top, right top, from(transparent), color-stop(50%, transparent), color-stop(50%, rgba(0, 0, 0, 0.5))), none;
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.3) 50%, transparent 50%, transparent), linear-gradient(to right, transparent 0%, transparent 50%, rgba(0, 0, 0, 0) 50%), linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 50%, transparent 50%, transparent), linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0) 50%), linear-gradient(to bottom, #ffffff 50%, transparent 50%, transparent), linear-gradient(to right, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.5) 50%), none;
+      background-size: 10px 10px;
+      position: relative;
+      overflow: hidden;
+      cursor: -webkit-grab;
+      cursor: grab;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(#000, .8);
+        z-index: 1;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      .editor-canvas-bg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        border: none;
+        outline: none;
+        z-index: 0;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      .editor-cropper-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        overflow: hidden;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-transform: translate(0, 0);
+        transform: translate(0, 0);
+        background-color: #fff;
+        background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(0, 0, 0, 0.3)), color-stop(50%, transparent), to(transparent)), -webkit-gradient(linear, left top, right top, from(transparent), color-stop(50%, transparent), color-stop(50%, rgba(0, 0, 0, 0))), -webkit-gradient(linear, left top, left bottom, color-stop(50%, rgba(0, 0, 0, 0.3)), color-stop(50%, transparent), to(transparent)), -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), color-stop(50%, rgba(0, 0, 0, 0))), -webkit-gradient(linear, left top, left bottom, color-stop(50%, #ffffff), color-stop(50%, transparent), to(transparent)), -webkit-gradient(linear, left top, right top, from(transparent), color-stop(50%, transparent), color-stop(50%, rgba(0, 0, 0, 0.5))), none;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0.3) 50%, transparent 50%, transparent), linear-gradient(to right, transparent 0%, transparent 50%, rgba(0, 0, 0, 0) 50%), linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 50%, transparent 50%, transparent), linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0) 50%), linear-gradient(to bottom, #ffffff 50%, transparent 50%, transparent), linear-gradient(to right, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.5) 50%), none;
+        background-size: 10px 10px;
+        z-index: 2;
+        cursor: move;
+        &::before {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          -webkit-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%);
+          width: calc(100% / 3);
+          height: 100%;
+          border-left: 1px dashed rgba(#fff, .4);
+          border-right: 1px dashed rgba(#fff, .4);
+          pointer-events: none;
+          z-index: 1;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          -webkit-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%);
+          height: calc(100% / 3);
+          width: 100%;
+          border-top: 1px dashed rgba(#fff, .4);
+          border-bottom: 1px dashed rgba(#fff, .4);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .editor-cropper-top-line {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 20px;
+          z-index: 1;
+          cursor: n-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 0;
+            top: 0;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+                    transform: translateX(-50%);
+            border-top: 3px solid #fff;
+          }
+        }
+        .editor-cropper-right-line {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 20px;
+          height: 100%;
+          z-index: 1;
+          cursor: e-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 20px;
+            right: 0;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+                    transform: translateY(-50%);
+            border-right: 3px solid #fff;
+          }
+        }
+        .editor-cropper-bottom-line {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          height: 20px;
+          z-index: 1;
+          cursor: n-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 0;
+            bottom: 0;
+            right: 50%;
+            -webkit-transform: translateX(50%);
+                    transform: translateX(50%);
+            border-bottom: 3px solid #fff;
+          }
+        }
+        .editor-cropper-left-line {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 20px;
+          height: 100%;
+          z-index: 1;
+          cursor: e-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 20px;
+            left: 0;
+            bottom: 50%;
+            -webkit-transform: translateY(50%);
+                    transform: translateY(50%);
+            border-left: 3px solid #fff;
+          }
+        }
+        .editor-cropper-top-right-corner {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          z-index: 1;
+          cursor: ne-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            border-top: 3px solid #fff;
+            border-right: 3px solid #fff;
+          }
+        }
+        .editor-cropper-top-left-corner {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          z-index: 1;
+          cursor: se-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-top: 3px solid #fff;
+            border-left: 3px solid #fff;
+          }
+        }
+        .editor-cropper-bottom-right-corner {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          z-index: 1;
+          cursor: se-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            right: 0;
+            border-bottom: 3px solid #fff;
+            border-right: 3px solid #fff;
+          }
+        }
+        .editor-cropper-bottom-left-corner {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          z-index: 1;
+          cursor: ne-resize;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            left: 0;
+            border-bottom: 3px solid #fff;
+            border-left: 3px solid #fff;
+          }
+        }
+        .editor-cropper-center-lines {
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          left: 50%;
+          top: 50%;
+          -webkit-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%);
+          z-index: 1;
+          pointer-events: none;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            border-left: 1px solid rgba(#fff, .8);
+          }
+          &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 0;
+            top: 50%;
+            left: 0;
+            border-top: 1px solid rgba(#fff, .8);
+          }
+        }
+
+        .editor-canvas-fg {
+          position: absolute;
+          left: 0;
+          top: 0;
+          margin: 0;
+          border: none;
+          outline: none;
+          pointer-events: none;
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+
+        &.canvas-dragging-by-space-key {
+          pointer-events: none;
+        }
+      }
+
+      &.canvas-dragging {
+        cursor: -webkit-grabbing;
+        cursor: grabbing;
+        .editor-cropper-container {
+          pointer-events: none;
+        }
+      }
+    }
+
+    .editor-tools {
+      width: 100%;
+      height: 50px;
+      border: 1px solid white;
+      margin-top: 20px;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+
+      .editor-tools-btn {
+        height: 40px;
+        width: 40px;
+        margin: 0 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #222;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+    }
+  }
+
+  &.editor-show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
